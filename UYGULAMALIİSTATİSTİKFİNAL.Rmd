@@ -1,0 +1,434 @@
+---
+title: ' IENG477 UYGULAMALı İSTATİSLİK PROJE '
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    number_section: yes
+    highlight: tango
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    number_section: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(dlookr)
+library(flextable)
+library(ggpubr)
+library(skimr)
+```
+
+# HAZIRLAYANLAR
+
+
+* Ahmet Furkan YILDIZ 20255040  
+* Elif BÜYÜKKÖSE 19255049  
+* Aydan ARSLAN 19255005  
+* Ebru EFE 19255060  
+* Recep Mert ŞIKTAŞ 20255062  
+* Mustafa Çağrı AKTAŞ 21255605
+
+Öğretim Üyesi  
+Doç. Dr. Özcan Mutlu
+
+Pamukkale Üniversitesi    
+Mühendislik Fakültesi   
+Endüstri Mühendisliği Bölümü   
+Denizli
+
+
+# İÇERİK
+
+*   Covid-19 Nedir    
+*   Konu  
+*   Neden Bu Konuyu Seçtik  
+*   Veriler Nasıl Toplandı  
+*   Hangi Paketleri Kullanıldı  
+*   Hipotez Testi  
+*   Grafikler  
+*   Grafiklerin Yorumlanması  
+
+
+## Covid-19
+
+
+Yeni Koronavirüs Hastalığı (COVID-19), ilk olarak Çin’in Vuhan Eyaleti’nde Aralık ayının sonlarında solunum yolu belirtileri (ateş, öksürük, nefes darlığı) gelişen bir grup hastada yapılan araştırmalar sonucunda 13 Ocak 2020’de tanımlanan bir virüstür.
+
+
+### KONU
+
+Omicron ve Delta arasındaki vaka ve ölüm sayılarının araştırılıp, analiz edilmesi ve grafik çizilip rapor oluşturulması.
+
+
+### Neden Bu Konuyu Seçtik 
+
+Dünyayı etkisi altına alan ve halen devam eden Covid-19 hastalığı hayatımızı büyük oranda değiştirmiştir. Bizde hayatımızı bu kadar yakından etkileyen Covid-19 hastalığını yakından incelemek istedik.
+
+
+### Veriler Nasıl Toplandı
+
+Sağlık Bakanlığı'nın yayınladığı günlük istatistiklerden yararlanıp verileri R programında grafiğe dönüştüreceğiz.    
+Bu veri Paketinde Toplamda 275 verimiz bulunmaktadır. Bu veri seti içerisinde 119 adet Omicron verisi 156 adet Delta verisi bulunmaktadır.
+
+
+### Hangi Paketleri Kullanıldı
+
+Projede verilerin düzenlenmesi, grafiklerin çizilmesi ve istatisiksel analizlerin yapılması için aşağıda belirtilen paketler kullanılmıştır.
+
+
+```{r, warning=FALSE,message=FALSE}
+
+library(tidyverse)
+```
+
+### Hipotez Testi
+
+        Delta varyantı Omicron varyantına göre vaka sayılarına oranla daha fazla ölüm oranına sahiptir.
+        
+  
+
+### Grafikler
+
+ **YAPILAN GRAFİKLERDE YAPILAN KARŞILAŞTIRMALARr**    
+
+*   Vaka Sayısı - Tarih    
+*   Varyantlara göre Vaka sayısının - Tarih    
+*   Vefat Sayısı - Tarih    
+*   Varyantlara göre Vefat Sayısı - Tarih    
+*   Ölüm Oranı - Tarih    
+*   Test Sayısı - Tarih    
+ 
+ 
+ 
+ 
+```{r,warning=FALSE,message=FALSE}
+library(readxl)
+istatistik <- read_excel("C:/Users/Furkan/Desktop/istatistik.xlsx")
+View(istatistik)
+```
+
+
+```{r}
+summary(istatistik)
+```
+
+
+```{r,warning=FALSE,message=FALSE}
+
+ggplot(data = istatistik ,aes(x=Tarih, y= Bugunku_Vaka_Sayisi))+
+   geom_line(aes( color="Vaka_Sayısı"))
+(echo = TRUE)
+  
+```
+
+
+2021 temmuz ayından 2022 nisan ayına kadar olan verilerin tarihlere göre vaka sayıları yukarıdaki grafikte verilmiştir. 
+Görüldüğü üzere temmuz ayındaki veriler ocak ayına kadar stabil olsa da ocak ve nisan ayları arasında vaka sayıları artış göstermiştir.
+
+
+
+```{r,warning=FALSE,message=FALSE}
+
+library(tidyverse)
+ggplot(data = istatistik ,aes(x=Tarih, y= Bugunku_Vaka_Sayisi))+
+  geom_line(aes(y=Omicron, color="Omicron"))+
+  geom_line(aes(y=Delta, color="Delta"))
+(echo=TRUE)
+
+```
+Bu grafikte ise Delta ve Omicronun tarihlere göre vaka sayıları gösterilmektedir. 
+10.12.2021 tarihinde Omicron varyantı çıkmasıyla birlikte Omicronun Delta varyantına göre vaka sayılarında ciddi bir artış gözlemlenmiştir. 
+Bu grafiği (Çizgi grafiği) seçmemizin nedeni tarihlere göre değişimleri daha net görebilmektir.
+
+
+
+
+```{r,warning=FALSE,message=FALSE}
+
+ggplot(data = istatistik , aes(x=Tarih, y= Bugunku_Vaka_Sayisi ))+
+  geom_point(aes(y=Omicron, color="Omicron"))+
+  geom_point(aes(y=Delta, color="Delta"))
+  
+```
+
+
+Günlük vaka sayısının tarihlere göre verilerinin nokta grafiği ile gösterimi.
+
+
+
+
+
+```{r,warning=FALSE,message=FALSE}
+ggplot(data = istatistik , aes(x=Tarih, y= Bugunku_Vefat_Sayisi ))+
+  geom_point(aes(color="Vefat Sayısı"))
+```
+
+
+2021 Temmuz ayından 2022 nisan ayına kadar olan verilerin tarihlere göre vefat sayıları yukarıdaki grafikte verilmiştir. 
+
+
+
+```{r,warning=FALSE,message=FALSE}
+ggplot(data = istatistik , aes(x=Tarih, y= Bugunku_Vefat_Sayisi ))+
+   geom_point(aes(y=Omicron_Olum, color="Omicron"))+
+  geom_point(aes(y=Delta_Olum, color="Delta"))
+```
+
+Delta varyantı tanısı konulduktan sonra Eylül ayına kadar vakalar artış göstermiştir. Eylül ayı ve Kasım-Aralık aylarında düşüşe geçmiştir. Omicron varyantı tanısı da aralık ayında konulmasıyla beraber vakalar tekrar artış göstermiştir. Omicron varyantında Şubat ayında pik noktası görüldükten sonra nisan ayına doğru ciddi bir düşüş gözlemlenmiştir.
+
+Delta varyantında vakalar hızlı bir biçimde artış gösterirken, omicron varyantı için aynı durum söz konusu değildir.
+
+
+
+
+
+
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+ggplot(data = istatistik ,aes(x=Tarih, y= Olum_Orani))+
+  geom_line(aes(y=Omicron_Oran, color="Omicron"))+
+  geom_line(aes(y=Delta_Oran, color="Delta"))
+(echo=FALSE)
+
+```
+Yukarıdaki grafikte Delta ve Omicron varyantlarının vefat sayıları eşit gibi gözükmesine rağmen bu grafikte ölüm oranının Delta varyantında net bir şekilde Omicron varyantına göre daha fazla olduğu görülmektedir.
+Delta varyantında ölüm oranı, yaz aylarında düşüşe geçmiştir.
+
+
+
+
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+ggplot(data = istatistik ,aes(x=Tarih, y= Bugunku_Test_Sayisi))+
+  geom_line(aes(y=Omicron_Test, color="Omicron"))+
+  geom_line(aes(y=Delta_Test, color="Delta"))
+```
+
+
+
+```{r,warning=FALSE,message=FALSE}
+library(readxl)
+istatistik1 <- read_excel("C:/Users/Furkan/Desktop/istatistik1.xlsx", 
+    col_types = c("date", "text", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric"))
+View(istatistik1)
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+ggplot(data = istatistik1 ,aes(x=Tarih, y=Vaka_Sayisi))+
+  geom_line(aes(y=Antalya_Omicron, color="Antalyadaki Omicron"))+
+  geom_line(aes(y=Antalya_Delta, color="Antalyadaki Delta"))
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+ggplot(data = istatistik1 ,aes(x=Tarih, y=Vaka_Sayisi))+
+  geom_line(aes(y=Denizli_Omicron, color="Denizlideki Omicron"))+
+  geom_line(aes(y=Denizli_Delta, color="Denizlideki Delta"))
+```
+
+
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+ggplot(data = istatistik1 ,aes(x=Tarih, y=Vaka_Sayisi))+
+  geom_line(aes(y=Ankara_Omicron, color="Ankaradaki Omicron "))+
+  geom_line(aes(y=Ankara_Delta, color="Ankaradaki Delta "))
+
+```
+
+
+
+
+# HİPOTEZ TESTLERİ
+
+```{r}
+
+istatistik%>%group_by(Varyant_Turu)%>%ggplot()+
+  aes(x=Varyant_Turu, y=Varyant_Olum_Orani)+
+  geom_boxplot(aes(colour=Varyant_Turu))+
+  labs(
+    x="Vakalar", 
+    y="Vefat Oranları", 
+    title = "Varyant Türüne göre Vefat Oranı")
+```
+
+Yukarıdaki grafikte kutular birbirine yakın olmadığı için ölüm oranları arasındaki değişim olduğu açıkça görülmektedir.
+
+Delta varyantının öldürme oranının Omicron Varyantına göre farkı açıkça görülmektedir.
+
+Delta ve Omicron Varyanıtının  Öldürme Oranlarını karşılaştırmak için Varyant türlerine göre ölüm oranlarının ortalamasını hesaplayalım. Bunun için önce group_by() fonksiyonu ile Varyant türüne göre gruplandırıp daha sonra summarise() fonksiyonu Ölüm oranları bazında ortalamaları hesaplayabiliriz.
+
+
+```{r}
+
+istatistik%>%group_by(Varyant_Turu)%>%
+  summarise(mean=mean(Varyant_Olum_Orani))%>%
+  knitr::kable(
+    col.names=c("Varyant Turu", "ölüm oranlarının Ortalaması"),
+    digits = 3
+    )%>%
+  kable_styling(full_width = FALSE)
+
+```
+
+  
+$$H_0: \mu_{Deltanın Oldurme Oranı}=\mu_{Omicron Oldurme Oranı}\\
+H_1: \mu_{Deltanın Oldurme Oranı} \ge \mu_{Omicron Oldurme Oranı}$$
+
+
+
+## T Testi
+
+
+
+```{r}
+ggplot(istatistik, aes(x =Bugunku_Vefat_Sayisi )) +
+  geom_density(colour = "black") +
+  facet_grid(Varyant_Turu ~ .)
+```
+Bu grafiklerden verilerin kısmen normal dağılıma  sahip olduğu görülmektedir. 
+
+Bu grafiğimizde Omicron için Vefat sayısının yüksek çıkıp oranının düşük çıktığı yerlerde Pozitif Vaka sayısınında artmış olduğunu görmüş bulunmaktayız.
+
+Aynı şekilde Delta içinde Vefat sayısının yüksek çıkıp oranın dahada arttığı yerlerde pozitif vaka sayısında azalış görülmektedir.
+
+
+
+```{r}
+
+ggplot(data=istatistik, aes(sample=Varyant_Olum_Orani))+
+ stat_qq(distribution = qnorm)+
+  stat_qq_line(distribution = qnorm)+
+  facet_grid(.~Varyant_Turu)
+
+```
+
+İkinci grafikte noktaların bir kısmı çizgi üzerinde bulunmadığı için verilerin normal dağılıma sahip olmadığını Birinci grafikte ise kısmen normal dağılıma sahip olduğunu söyleyebiliriz.
+
+
+
+```{r}
+
+ggqqplot(istatistik, "Varyant_Olum_Orani", facet.by="Varyant_Turu",)
+
+```
+
+
+Delta Varyantına ait verilerin bir kısmı güven aralığının dışında olduğundan normal dağılıma sahip değildir.
+
+
+### Shapiro-Wilk testi
+
+$$
+\begin{align}
+&H_0: \text{Varyant ile ölüm arasında oran vardır}\\
+&H_1: \text{Varyant ile ölüm arasında oran yoktur}
+\end{align}
+$$
+
+
+
+```{r}
+
+istatistik %>%
+  group_by(Varyant_Turu) %>%
+  normality(Varyant_Olum_Orani)%>%flextable()
+
+```
+
+
+```{r}
+test=t.test(data=istatistik, Bugunku_Vefat_Sayisi~Varyant_Turu, alternative="two.sided", var.equal=TRUE)
+test
+```
+
+
+Yukarıdaki sonuçlarda pdeğeri=5.29e-11<0.05 olduğundan H0 hipotezi reddedilemez. Varyant ile ölüm arasında bir oran olduğu görülmektedir.
+
+
+```{r}
+
+istatistik%>%group_by(Varyant_Turu)%>%
+  summarise(mean=mean(Varyant_Olum_Orani))%>%
+  knitr::kable(
+    col.names=c("İyilesen Sayisi", "Vefat Sayisi"),
+    digits = 3
+    )%>%
+  kable_styling(full_width = FALSE)
+
+```
+
+
+```{r}
+
+ggplot(istatistik)+
+  aes(x=Varyant_Turu, y=Varyant_Olum_Orani)+
+  geom_boxplot()+
+  labs(
+    x="Varyant Turu", 
+    y="Ölüm Oranı", 
+    title = "Varyant Türünün Ölüm oranı arasındaki ilişki")
+    
+```
+
+
+Delta Ölüm oranının Omicron ölüm oranına göre daha fazla olduğu iddiasını doğru olup olmadığını verilerin normal dağılıma sahip olduğunu varsayarak t testi ile belirleyelim. Bunun için hipotezleri aşağıdaki gibi oluşturabiliriz.
+
+
+$$H_0: \mu_{Omicron Ölüm Oranı}=\mu_{Delta Ölüm Oranı}\\
+H_1: \mu_{Omicron Ölüm Oranı}<\mu_{Delta Ölüm Oranı}$$
+
+
+```{r}
+test2=t.test(data=istatistik, Varyant_Olum_Orani~Varyant_Turu , var.equal=TRUE)
+test2
+```
+
+Yukarıdaki sonuçlarda p-value = 2.2e-16<0.05 olduğundan H0 hipotezi reddedilir. Delta Varyantının Omicron varyantına göre öldürme orani daha fazladır.
+
+  
+## Kİ-KARE TESTİ
+
+```{r}
+ggplot(istatistik,aes(x=Mevsim, fill=Varyant_Turu))+
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", 
+             aes(label = paste( "%", round((..count..)/sum(..count..)*100))),
+             position=position_fill(vjust=0.5), colour="white",size=8)
+```
+Grafikte Sıcaklık arttıkça Omicron varyantının öldürücülüğü azaldığı Delta varyantının ise arttığı görülmektedir. Bu nedenle aşağıdaki hipotezi test edelim
+
+
+$$
+\begin{align}
+&H_0: \text{Mevsim ile Ölüm oranı arasında ilişki vardır}\\
+&H_1: \text{Mevsim ile Ölüm oranı arasında ilişki yoktur}
+\end{align}
+$$
+
+
+```{r}
+
+tablo <- as.matrix(table(istatistik$Mevsim , istatistik$Varyant_Turu))
+tablo
+```
+
+
+```{r}
+chisq.test(tablo,correct = TRUE)
+```
+
+ 5.52e-05<0.05 olduğundan H0 hipotezi reddedilemez. Mevsim ile Olüm Oranı arasında ilişki vardır.
+
